@@ -16,7 +16,7 @@ namespace CandidateApplicationManager.Api.Entities
         public string ApplicationTitle { get; set; }
 
         [Required]
-        [JsonProperty("ApplicationDescription")]
+        [JsonProperty("applicationDescription")]
         public string ApplicationDescription { get; set; }
 
         [Required]

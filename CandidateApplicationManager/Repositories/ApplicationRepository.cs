@@ -37,13 +37,12 @@ namespace CandidateApplicationManager.Api.Repository
 
         public async Task<Application> GetApplicationAsync(string applicationId)
         {
-            //QueryDefinition? 
-                var query = _applicationContainer.GetItemLinqQueryable<Application>()
+            QueryDefinition query = _applicationContainer.GetItemLinqQueryable<Application>()
                 .Where(r => r.ApplicationId.Equals(applicationId)).Take(1).ToQueryDefinition();
 
             string? sqlQuery = query.QueryText;
 
-            var response = await _applicationContainer.GetItemQueryIterator <Application>(query).ReadNextAsync();
+            FeedResponse<Application> response = await _applicationContainer.GetItemQueryIterator <Application>(query).ReadNextAsync();
             return response.FirstOrDefault();
         }
 

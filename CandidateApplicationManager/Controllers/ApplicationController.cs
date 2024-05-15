@@ -3,6 +3,7 @@ using CandidateApplicationManager.Api.Core;
 using CandidateApplicationManager.Api.Entities;
 using CandidateApplicationManager.Dtos;
 using CandidateApplicationManager.ExtensionsDto;
+using CandidateApplicationManager.Api.Repository;
 
 namespace CandidateApplicationManager.Api.Controllers
 {
@@ -11,9 +12,11 @@ namespace CandidateApplicationManager.Api.Controllers
     public class ApplicationController : ControllerBase
     {
         private readonly IApplicationRepository _applicationRepository;
-        public ApplicationController( IApplicationRepository applicationRepository)
+        private readonly ILogger<ApplicationController> _logger;
+        public ApplicationController( IApplicationRepository applicationRepository, ILogger<ApplicationController> logger)
         {
             _applicationRepository = applicationRepository;
+            _logger = logger;
         }
 
         [HttpGet("fetchById")]

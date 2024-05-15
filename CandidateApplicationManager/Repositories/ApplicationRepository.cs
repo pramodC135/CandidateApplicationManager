@@ -3,6 +3,7 @@ using Microsoft.Azure.Cosmos.Linq;
 using CandidateApplicationManager.Api.Core;
 using CandidateApplicationManager.Api.Entities;
 
+
 namespace CandidateApplicationManager.Api.Repository
 {
     public class ApplicationRepository : IApplicationRepository
@@ -25,14 +26,24 @@ namespace CandidateApplicationManager.Api.Repository
             return response.Resource;
         }
 
-        public Task<Application> DeleteApplicationAsync(string applicationId)
+        public async Task DeleteApplicationAsync(string applicationId)
         {
-            throw new NotImplementedException();
+            await _applicationContainer.DeleteItemAsync<Application>(applicationId, new PartitionKey(applicationId));
         }
 
-        public Task<IEnumerable<Application>> GetAllApplicationsAsync()
+        public async Task<IEnumerable<Application>> GetAllApplicationsAsync()
         {
-            throw new NotImplementedException();
+            FeedIterator <Application>? query = _applicationContainer.GetItemLinqQueryable<Application>()
+                .ToFeedIterator();
+
+            List<Application> applications = new List<Application>();
+            while (query.HasMoreResults)
+            {
+                FeedResponse<Application> response = await query.ReadNextAsync();
+                applications.AddRange(response);
+            }
+
+            return applications;
         }
 
         public async Task<Application> GetApplicationAsync(string applicationId)
@@ -42,13 +53,14 @@ namespace CandidateApplicationManager.Api.Repository
 
             string? sqlQuery = query.QueryText;
 
-            FeedResponse<Application> response = await _applicationContainer.GetItemQueryIterator <Application>(query).ReadNextAsync();
+            FeedResponse<Application>? response = await _applicationContainer.GetItemQueryIterator <Application>(query).ReadNextAsync();
             return response.FirstOrDefault();
         }
 
-        public Task<Application> UpdateApplicationAsync(Application application)
+        public async Task<Application> UpdateApplicationAsync(Application application)
         {
-            throw new NotImplementedException();
+            ItemResponse<Application>? response = await _applicationContainer.ReplaceItemAsync(application, application.Id.ToString());          
+            return response.Resource;
         }
     }
 }

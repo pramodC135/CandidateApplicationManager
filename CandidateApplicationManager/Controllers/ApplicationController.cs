@@ -39,5 +39,30 @@ namespace CandidateApplicationManager.Api.Controllers
             Application? createdApplication = await _applicationRepository.CreateApplicationAsync(application);
             return CreatedAtAction(nameof(GetApplicationById), new { applicationId = createdApplication?.ApplicationId?.ToString() }, createdApplication);
         }
+
+        [HttpPut("edit")]
+        public async Task<ActionResult<ApplicationDto>> UpdateApplication(string applicationId, Application application)
+        {
+            Application? existingApplication = await _applicationRepository.GetApplicationAsync(applicationId);
+
+            if (existingApplication == null)
+            {
+                return NotFound();
+            }
+
+            //Preserve the original ID
+            application.Id = existingApplication.Id;
+            application.ApplicationId = existingApplication.ApplicationId;
+
+            Application? updatedApplication = await _applicationRepository.UpdateApplicationAsync(application);
+            return Ok(updatedApplication.AsDto());
+        }
+
+        [HttpGet("list")]
+        public async Task<ActionResult<IEnumerable<ApplicationDto>>> GetAllApplications()
+        {
+            IEnumerable<Application>? applicatios = await _applicationRepository.GetAllApplicationsAsync();
+            return Ok(applicatios?.Select(a => a.AsDto()));
+        }
     }
 }

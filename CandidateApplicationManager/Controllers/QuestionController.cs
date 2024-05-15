@@ -1,5 +1,7 @@
 ﻿using CandidateApplicationManager.Api.Core;
 using CandidateApplicationManager.Api.Entities;
+using CandidateApplicationManager.Dtos;
+using CandidateApplicationManager.ExtensionsDto;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CandidateApplicationManager.Controllers
@@ -16,25 +18,25 @@ namespace CandidateApplicationManager.Controllers
         }
 
         [HttpGet("fetchById")]
-        public async Task<ActionResult<Question>> GetQuestionById(string questionId)
+        public async Task<ActionResult<QuestionDto>> GetQuestionById(string questionId)
         {
             Question? question = await _questionRepository.GetQuestionAsync(questionId);
             if (question == null)
             {
                 return NotFound();
             }
-            return Ok(question);
+            return Ok(question.AsDto());
         }
 
         [HttpPost("add")]
-        public async Task<ActionResult<Question>> CreateQuestion(Question question)
+        public async Task<ActionResult<QuestionDto>> CreateQuestion(Question question)
         {
             question.Id = Guid.NewGuid();
             question.QueastionId = question.Id.ToString();
 
             Question? createdQuestion = await _questionRepository.CreateQuestionAsync(question);
 
-            return CreatedAtAction(nameof(GetQuestionById), new { questionId = createdQuestion.QueastionId.ToString() }, createdQuestion);
+            return CreatedAtAction(nameof(GetQuestionById), new { questionId = createdQuestion.QueastionId?.ToString() }, createdQuestion);
         }
     }
 }

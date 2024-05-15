@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using CandidateApplicationManager.Api.Core;
 using CandidateApplicationManager.Api.Entities;
+using CandidateApplicationManager.Dtos;
+using CandidateApplicationManager.ExtensionsDto;
 
 namespace CandidateApplicationManager.Api.Controllers
 {
@@ -15,29 +17,24 @@ namespace CandidateApplicationManager.Api.Controllers
         }
 
         [HttpGet("fetchById")]
-        public async Task<ActionResult<Application>> GetApplicationById(string applicationId)
+        public async Task<ActionResult<ApplicationDto>> GetApplicationById(string applicationId)
         {
             Application? application = await _applicationRepository.GetApplicationAsync(applicationId);
             if(application == null)
             {
                 return NotFound();
             }
-            return Ok(application); 
+            return Ok(application.AsDto()); 
         }
 
         [HttpPost("add")]
-        public async Task<ActionResult<Application>> CreateApplication(Application application)
+        public async Task<ActionResult<ApplicationDto>> CreateApplication(Application application)
         {
             application.Id = Guid.NewGuid();
             application.ApplicationId = application.Id.ToString();
-            /*application.CustomQuestions.ForEach(CustomQuestion =>
-            {
-
-
-            });*/
 
             Application? createdApplication = await _applicationRepository.CreateApplicationAsync(application);
-            return CreatedAtAction(nameof(GetApplicationById), new { applicationId = createdApplication.ApplicationId.ToString() }, createdApplication);
+            return CreatedAtAction(nameof(GetApplicationById), new { applicationId = createdApplication.ApplicationId?.ToString() }, createdApplication);
         }
     }
 }

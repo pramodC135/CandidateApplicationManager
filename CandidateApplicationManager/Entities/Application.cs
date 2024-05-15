@@ -43,7 +43,7 @@ namespace CandidateApplicationManager.Api.Entities
         [JsonProperty("gender")]
         public FormOptions Gender { get; set; }
         [JsonProperty("customQuestions")]
-        public List<CustomQuestions> CustomQuestions { get; set; }
+        public List<CustomQuestions>? CustomQuestions { get; set; }
     }
 
     public class FormOptions

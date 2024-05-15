@@ -15,8 +15,8 @@ namespace CandidateApplicationManager.Api.Repository
             this.configuration = configuration;
 
             string? databaseName = configuration["CosmosDbSettings:DatabaseName"];
-            string? taskContainerName = "Applications";
-            _applicationContainer = cosmosClient.GetContainer(databaseName, taskContainerName);         
+            string? applicationsContainerName = "Applications";
+            _applicationContainer = cosmosClient.GetContainer(databaseName, applicationsContainerName);         
         }
 
         public async Task<Application> CreateApplicationAsync(Application application)

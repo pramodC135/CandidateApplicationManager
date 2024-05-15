@@ -14,8 +14,8 @@ namespace CandidateApplicationManager.Repositories
             this.configuration = configuration;
 
             string? databaseName = configuration["CosmosDbSettings:DatabaseName"];
-            string? taskContainerName = "Queastions";
-            _questionContainer = cosmosClient.GetContainer(databaseName, taskContainerName);
+            string? queastionsContainerName = "Queastions";
+            _questionContainer = cosmosClient.GetContainer(databaseName, queastionsContainerName);
         }
 
         public async Task<Question> CreateQuestionAsync(Question question)

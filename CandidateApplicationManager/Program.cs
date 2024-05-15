@@ -2,6 +2,7 @@ using Microsoft.Azure.Cosmos;
 using CandidateApplicationManager.Api.Core;
 using CandidateApplicationManager.Api.Repository;
 using CandidateApplicationManager.Repositories;
+using CandidateApplicationManager.Core;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -38,6 +39,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<IApplicationRepository, ApplicationRepository>();
 builder.Services.AddScoped<IQuestionRepository, QuestionRepository>();
+builder.Services.AddScoped<ICandidateApplicationRepository, CandidateApplicationRepository>();
 
 var app = builder.Build();
 

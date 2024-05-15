@@ -28,6 +28,19 @@ namespace CandidateApplicationManager.Controllers
             return Ok(question.AsDto());
         }
 
+        [HttpGet("fetchByQuestionType")]
+        public async Task<ActionResult<IEnumerable<QuestionDto>>> GetQuestionByType(QuestionType questionType)
+        {
+            IEnumerable<Question>? questions = await _questionRepository.GetQuestionByTypeAsync(questionType);
+
+            if (questions == null)
+            {
+                return NotFound();
+            }
+            
+            return Ok(questions?.Select(a => a.AsDto()));
+        }
+
         [HttpPost("add")]
         public async Task<ActionResult<QuestionDto>> CreateQuestion(Question question)
         {

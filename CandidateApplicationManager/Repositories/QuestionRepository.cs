@@ -57,6 +57,21 @@ namespace CandidateApplicationManager.Repositories
             return response.FirstOrDefault();
         }
 
+        public async Task<IEnumerable<Question>> GetQuestionByTypeAsync(QuestionType questionType)
+        {
+            FeedIterator<Question>? query = _questionContainer.GetItemLinqQueryable<Question>()
+                .Where(r => r.QuestionType == questionType).ToFeedIterator();
+
+            List<Question> questions = new List<Question>();
+            while (query.HasMoreResults)
+            {
+                FeedResponse<Question> response = await query.ReadNextAsync();
+                questions.AddRange(response);
+            }
+
+            return questions;
+        }
+
         public async Task<Question> UpdateQuestionAsync(Question question)
         {
             ItemResponse<Question>? response = await _questionContainer.ReplaceItemAsync(question, question.Id.ToString());

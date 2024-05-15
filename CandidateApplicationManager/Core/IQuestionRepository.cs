@@ -8,6 +8,7 @@ namespace CandidateApplicationManager.Api.Core
         Task<Question> UpdateQuestionAsync(Question question);  
         Task DeleteQuestionAsync(string questionId);
         Task<Question> GetQuestionAsync(string questionId);
+        Task<IEnumerable<Question>> GetQuestionByTypeAsync(QuestionType questionType);
         Task<IEnumerable<Question>> GetAllQuestionsAsync();
     }
 }

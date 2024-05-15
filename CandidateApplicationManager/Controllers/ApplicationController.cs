@@ -34,7 +34,7 @@ namespace CandidateApplicationManager.Api.Controllers
             application.ApplicationId = application.Id.ToString();
 
             Application? createdApplication = await _applicationRepository.CreateApplicationAsync(application);
-            return CreatedAtAction(nameof(GetApplicationById), new { applicationId = createdApplication.ApplicationId?.ToString() }, createdApplication);
+            return CreatedAtAction(nameof(GetApplicationById), new { applicationId = createdApplication?.ApplicationId?.ToString() }, createdApplication);
         }
     }
 }

@@ -43,10 +43,15 @@ namespace CandidateApplicationManager.Api.Entities
 
     public class CustomQuestionsAnswers
     {
+        [JsonProperty("queastionId")]
         public Guid QueastionId { get; set; }
+        [JsonProperty("questionType")]
         public QuestionType QuestionType { get; set; }
+        [JsonProperty("answer")]
         public string? Answer { get; set; }
+        [JsonProperty("isMultiChoice")]
         public bool IsMultiChoice { get; set; } = false;
+        [JsonProperty("answers")]
         public List<string?>? Answers { get; set; }
 
 

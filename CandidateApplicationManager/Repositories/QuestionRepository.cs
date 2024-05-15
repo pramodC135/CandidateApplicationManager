@@ -2,6 +2,8 @@
 using CandidateApplicationManager.Api.Entities;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Azure.Cosmos.Linq;
+using System;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace CandidateApplicationManager.Repositories
 {
@@ -24,14 +26,24 @@ namespace CandidateApplicationManager.Repositories
             return response.Resource;
         }
 
-        public Task<Question> DeleteQuestionAsync(string questionId)
+        public async Task DeleteQuestionAsync(string questionId)
         {
-            throw new NotImplementedException();
+            await _questionContainer.DeleteItemAsync<Question>(questionId, new PartitionKey(questionId));
         }
 
-        public Task<IEnumerable<Question>> GetAllQuestionsAsync()
+        public async Task<IEnumerable<Question>> GetAllQuestionsAsync()
         {
-            throw new NotImplementedException();
+            FeedIterator<Question>? query = _questionContainer.GetItemLinqQueryable<Question>()
+                .ToFeedIterator();
+
+            List<Question> questions = new List<Question>();
+            while (query.HasMoreResults)
+            {
+                FeedResponse<Question> response = await query.ReadNextAsync();
+                questions.AddRange(response);
+            }
+
+            return questions;
         }
 
         public async Task<Question> GetQuestionAsync(string questionId)
@@ -45,9 +57,10 @@ namespace CandidateApplicationManager.Repositories
             return response.FirstOrDefault();
         }
 
-        public Task<Question> UpdateQuestionAsync(Question question)
+        public async Task<Question> UpdateQuestionAsync(Question question)
         {
-            throw new NotImplementedException();
+            ItemResponse<Question>? response = await _questionContainer.ReplaceItemAsync(question, question.Id.ToString());
+            return response.Resource;
         }
     }
 }

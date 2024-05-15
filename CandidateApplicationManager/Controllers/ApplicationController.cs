@@ -3,7 +3,6 @@ using CandidateApplicationManager.Api.Core;
 using CandidateApplicationManager.Api.Entities;
 using CandidateApplicationManager.Dtos;
 using CandidateApplicationManager.ExtensionsDto;
-using CandidateApplicationManager.Api.Repository;
 
 namespace CandidateApplicationManager.Api.Controllers
 {

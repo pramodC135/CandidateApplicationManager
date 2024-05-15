@@ -58,7 +58,7 @@ namespace CandidateApplicationManager.Controllers
         }
 
         [HttpGet("list")]
-        public async Task<ActionResult<IEnumerable<QuestionDto>>> GetAllApplications()
+        public async Task<ActionResult<IEnumerable<QuestionDto>>> GetAllQuestions()
         {
             IEnumerable<Question>? questions = await _questionRepository.GetAllQuestionsAsync();
             return Ok(questions?.Select(a => a.AsDto()));

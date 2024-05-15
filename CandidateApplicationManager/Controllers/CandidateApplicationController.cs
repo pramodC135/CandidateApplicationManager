@@ -38,5 +38,30 @@ namespace CandidateApplicationManager.Controllers
 
             return CreatedAtAction(nameof(GetCandidateApplicationById), new { candidateApplicationId = createdCandidateApplication?.CandidateApplicationId?.ToString() }, createdCandidateApplication);
         }
+
+        [HttpPut("edit")]
+        public async Task<ActionResult<CandidateApplicationDto>> UpdateQuestion(string candidateApplicationId, CandidateApplication candidateApplication)
+        {
+            CandidateApplication? existingCandidateApplication = await _candidateApplicationRepository.GetCandidateApplicationAsync(candidateApplicationId);
+
+            if (existingCandidateApplication == null)
+            {
+                return NotFound();
+            }
+
+            //Preserve the original ID
+            candidateApplication.Id = existingCandidateApplication.Id;
+            candidateApplication.CandidateApplicationId = existingCandidateApplication.CandidateApplicationId;
+
+            CandidateApplication? updatedCandidateApplication = await _candidateApplicationRepository.UpdateCandidateApplicationAsync(candidateApplication);
+            return Ok(updatedCandidateApplication?.AsDto());
+        }
+
+        [HttpGet("list")]
+        public async Task<ActionResult<IEnumerable<CandidateApplicationDto>>> GetAllCandidateApplications()
+        {
+            IEnumerable<CandidateApplication>? candidateApplications = await _candidateApplicationRepository.GetAllCandidateApplicationAsync();
+            return Ok(candidateApplications?.Select(a => a.AsDto()));
+        }
     }
 }

@@ -24,14 +24,24 @@ namespace CandidateApplicationManager.Repositories
             return response.Resource;
         }
 
-        public Task DeleteCandidateApplicationAsync(string candidateApplicationId)
+        public async Task DeleteCandidateApplicationAsync(string candidateApplicationId)
         {
-            throw new NotImplementedException();
+            await _candidateApplicationContainer.DeleteItemAsync<CandidateApplication>(candidateApplicationId, new PartitionKey(candidateApplicationId));
         }
 
-        public Task<IEnumerable<CandidateApplication>> GetAllCandidateApplicationAsync()
+        public async Task<IEnumerable<CandidateApplication>> GetAllCandidateApplicationAsync()
         {
-            throw new NotImplementedException();
+            FeedIterator<CandidateApplication>? query = _candidateApplicationContainer.GetItemLinqQueryable<CandidateApplication>()
+                .ToFeedIterator();
+
+            List<CandidateApplication> candidateApplications = new List<CandidateApplication>();
+            while (query.HasMoreResults)
+            {
+                FeedResponse<CandidateApplication> response = await query.ReadNextAsync();
+                candidateApplications.AddRange(response);
+            }
+
+            return candidateApplications;
         }
 
         public async Task<CandidateApplication> GetCandidateApplicationAsync(string candidateApplicationId)
@@ -45,9 +55,10 @@ namespace CandidateApplicationManager.Repositories
             return response.FirstOrDefault();
         }
 
-        public Task<CandidateApplication> UpdateCandidateApplicationAsync(CandidateApplication candidateApplication)
+        public async Task<CandidateApplication> UpdateCandidateApplicationAsync(CandidateApplication candidateApplication)
         {
-            throw new NotImplementedException();
+            ItemResponse<CandidateApplication>? response = await _candidateApplicationContainer.ReplaceItemAsync(candidateApplication, candidateApplication.Id.ToString());
+            return response.Resource;
         }
     }
 }
